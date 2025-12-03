@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PhotoBooth</title>
+  <style>
+    video, canvas {
+      border: 2px solid #333;
+      margin: 10px;
+      width: 320px;
+      height: 240px;
+    }
+  </style>
+</head>
+<body>
+  <h1>📸 Simple Photobooth</h1>
+  
+  <video id="video" autoplay></video>
+  <canvas id="canvas"></canvas>
+  <br>
+  <button id="capture">Capture</button>
+  <button id="download">Download</button>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const captureBtn = document.getElementById('capture');
+    const downloadBtn = document.getElementById('download');
+
+    // Minta izin akses webcam
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(err => {
+        console.error("Error akses webcam:", err);
+      });
+
+    // Ambil gambar dari video ke canvas
+    captureBtn.addEventListener('click', () => {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    });
+
+    // Download hasil canvas sebagai gambar
+    downloadBtn.addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.download = 'photo.png';
+      link.href = canvas.toDataURL();
+      link.click();
+    });
+  </script>
+</body>
+</html>
